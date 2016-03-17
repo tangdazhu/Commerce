@@ -38,7 +38,7 @@
 
 	<div class="container">
 
-		<form:form class="form-signin" action="/Commerce/loginSubmit" method="POST" modelAttribute="userForm">
+		<form:form class="form-signin" action="/Commerce/commodityList" method="POST" modelAttribute="userForm">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<label for="inputEmail" class="sr-only">Email address</label> 
 			

@@ -32,14 +32,15 @@ class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
 </bean>
 
 
-<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀  -->
-<bean
-class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-<property name="viewClass"
-value="org.springframework.web.servlet.view.JstlView" />
-<property name="prefix" value="/pages/"></property>
-<property name="suffix" value=".jsp"></property>
-</bean>
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
+
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/pages/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
 
 
   <!--这个配置很关键，用以访问静态资源文件 -->  

@@ -53,9 +53,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="entry" items="${commodityList}">
+					<c:forEach var="entry" items="${commodityList}" varStatus="count">
 						<tr>
-							<td></td>
+							<td>${count.count}</td>
 							<td>${entry.name}</td>
 							<td>${entry.description}</td>
 							<td>${entry.category.name}</td>
