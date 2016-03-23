@@ -29,6 +29,10 @@
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 <script src="assets/js/ie-emulation-modes-warning.js"></script>
+<script src="js/jquery-2.2.2.min.js"></script>
+<script src="js/jquery.bootpag.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -40,7 +44,7 @@
 
 <body>
 
-	<div class="container">
+	<div class="container" id="content">
 
 		<form class="form-signin" action="">
 			<table class="table table-hover">
@@ -52,7 +56,9 @@
 						<th>Category</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="page-result">
+				
+				<!-- 
 					<c:forEach var="entry" items="${commodityList}" varStatus="count">
 						<tr>
 							<td>${count.count}</td>
@@ -61,12 +67,72 @@
 							<td>${entry.category.name}</td>
 						</tr>
 					</c:forEach>
-
+ -->
 				</tbody>
 			</table>
+			
 		</form>
 
 	</div>
+<div id="page-selection"></div>	
+    
+    <script>
+    var showData = $('#page-result');
+    $( window ).load(function() {
+      	$.ajax({
+ 	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1",
+ 	      }).done(function(data) { 	    	  
+ 	     	
+ 	        	var datalist=data.list;
+ 	        	showData.empty();
+ 	        	var content;
+ 	        	for (var i = 0, len = datalist.length; i < len; i++) {
+ 	        		 content = content + '<tr><td>'+datalist[i].id + "</td>"+'<td>'+datalist[i].name + "</td>"+'<td>'+datalist[i].description + "</td>"+'<td>'+datalist[i].categoryName + "</td>"+ '</tr>';                
+ 	            }  	        
+ 	        	    	        
+ 	           showData.append(content);
+ 	        	    	  
+ 	        	    	    });
+      	});
+    </script>
+    <script>
+	var showData = $('#page-result');
+    // init bootpag
+        $('#page-selection').bootpag({
+            total: 50,
+            page: 1,
+            maxVisible: 5,
+            leaps: true,
+            firstLastUse: true,
+            first: '←',
+            last: '→',
+            wrapClass: 'pagination',
+            activeClass: 'active',
+            disabledClass: 'disabled',
+            nextClass: 'next',
+            prevClass: 'prev',
+            lastClass: 'last',
+            firstClass: 'first'
+        }).on("page", function(event, /* page number here */ num){
+
+        	$.ajax({
+        	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber="+num,
+        	      }).done(function(data) {
+    
+        	
+        	var datalist=data.list;
+        	showData.empty();
+        	var content;
+        	for (var i = 0, len = datalist.length; i < len; i++) {
+        		 content = content + '<tr><td>'+datalist[i].id + "</td>"+'<td>'+datalist[i].name + "</td>"+'<td>'+datalist[i].description + "</td>"+'<td>'+datalist[i].categoryName + "</td>"+ '</tr>';                
+            }  	        
+        	    	        
+           showData.append(content);
+        	    	  
+        	    	    });
+        	      });
+     
+    </script>
 	<!-- /container -->
 
 
