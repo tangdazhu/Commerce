@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page import="com.commerce.util.Constants"%>
+  <%int pageSize = Constants.getPageSize();
+%>
   
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 	"http://www.w3.org/TR/html4/loose.dtd">
@@ -52,6 +55,14 @@
 				<input
 				type="password" name="password" class="form-control"
 				placeholder="Password" required>
+			
+				<input
+				type="hidden" name="pageNumber" value="1">
+			
+			
+				<input
+				type="hidden" name="pageSize" value="<%=pageSize%>">			
+			
 			
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me">

@@ -12,9 +12,9 @@ public class CommodityVO implements java.io.Serializable {
 	private String name;
 	private String description;
 
-	public CommodityVO(int id, Category category, String name, String description) {
+	public CommodityVO(int id, String categoryName, String name, String description) {
 		this.id = id;
-		this.categoryName = category.getName();
+		this.categoryName = categoryName;
 		this.name = name;
 		this.description = description;
 	}

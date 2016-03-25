@@ -1,6 +1,5 @@
 package com.commerce.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,15 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.commerce.model.Commodity;
 import com.commerce.model.User;
-import com.commerce.model.vo.CommodityListJason;
-import com.commerce.model.vo.CommodityVO;
 import com.commerce.service.CommodityManager;
 import com.commerce.service.UserManager;
 import com.commerce.view.CommodityListExcelView;
@@ -45,9 +40,11 @@ public class CommerceController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/commodityList", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/commodityList", method = { RequestMethod.POST, RequestMethod.GET }, params = {
+			"pageNumber", "pageSize" })
 	public ModelAndView loginSubmit(@ModelAttribute("userForm") User user, Model model, HttpServletRequest request,
-			SessionStatus status, WebRequest webRequest) throws Exception {
+			@RequestParam(value = "pageNumber") int pageNumber, @RequestParam(value = "pageSize") int pageSize)
+					throws Exception {
 
 		ModelAndView mv = new ModelAndView();
 
@@ -58,7 +55,19 @@ public class CommerceController {
 
 		User dbuser = userManager.getUserByEmail(email);
 
-		List l = commodityManager.listAllCommodities();
+		List l = null;
+		
+		if (pageSize == 0) {
+			l = commodityManager.listAllCommodities();
+		} else {
+			l = commodityManager.listCommoditiesByPage(pageNumber, pageSize);
+
+			int total = commodityManager.getSizeOfCommodities("");
+			int totalPage = (int) Math.ceil(total / pageSize);
+			mv.addObject("pageSize", pageSize);
+			mv.addObject("totalPage", totalPage);
+
+		}		
 
 		String attributeName = "commodityList";
 		Object attributeValue = l;
@@ -92,22 +101,9 @@ public class CommerceController {
 			throws Exception {
 
 		if (suffix.equals("")) {
-			mv.addObject(attributeValue);
+			mv.addObject(attributeName, attributeValue);
 		} else if (suffix.equals("json")) {
-			CommodityListJason jason=new CommodityListJason();
-			List l = new ArrayList();
-			List<Commodity> list = (List<Commodity>) attributeValue;
-			if (list != null) {
-				for (int i = 0; i < list.size(); i++) {
-					Commodity c = list.get(i);
-					CommodityVO co = new CommodityVO(c.getId(), c.getCategory(), c.getName(), c.getDescription());
-					l.add(co);
-				}
-			}
-			jason.setName("CommodityList");
-			jason.setList(l);
-			mv.addObject(jason);
-
+			mv.addObject(attributeName, attributeValue);
 			CommodityListJsonView view = new CommodityListJsonView();
 			mv.setView(view.getView());
 		} else if (suffix.equals("xls")) {

@@ -9,4 +9,8 @@ public interface CommodityManager {
 	public Commodity getCommodityByCategory(String name) ;
 	
 	public List<Commodity> listAllCommodities() ;
+	
+	public List<Commodity> listCommoditiesByPage(int pageNumber,int pageSize) ;
+	
+	public int getSizeOfCommodities(String query);
 }

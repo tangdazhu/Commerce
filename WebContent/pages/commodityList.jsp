@@ -50,7 +50,7 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th></th>
+						<th>ID</th>
 						<th>Name</th>
 						<th>Description</th>
 						<th>Category</th>
@@ -64,7 +64,7 @@
 							<td>${count.count}</td>
 							<td>${entry.name}</td>
 							<td>${entry.description}</td>
-							<td>${entry.category.name}</td>
+							<td>${entry.categoryName}</td>
 						</tr>
 					</c:forEach>
  -->
@@ -78,12 +78,14 @@
     
     <script>
     var showData = $('#page-result');
+    var pageSize=${pageSize};
+
     $( window ).load(function() {
       	$.ajax({
- 	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1",
+ 	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1&pageSize="+pageSize,
  	      }).done(function(data) { 	    	  
- 	     	
- 	        	var datalist=data.list;
+ 	     	console.log(data);
+ 	        	var datalist=data.commodityList;
  	        	showData.empty();
  	        	var content;
  	        	for (var i = 0, len = datalist.length; i < len; i++) {
@@ -94,12 +96,10 @@
  	        	    	  
  	        	    	    });
       	});
-    </script>
-    <script>
-	var showData = $('#page-result');
+    
     // init bootpag
         $('#page-selection').bootpag({
-            total: 50,
+            total:${totalPage},
             page: 1,
             maxVisible: 5,
             leaps: true,
@@ -116,11 +116,11 @@
         }).on("page", function(event, /* page number here */ num){
 
         	$.ajax({
-        	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber="+num,
+        	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber="+num+"&pageSize="+pageSize ,
         	      }).done(function(data) {
     
         	
-        	var datalist=data.list;
+        	var datalist=data.commodityList;
         	showData.empty();
         	var content;
         	for (var i = 0, len = datalist.length; i < len; i++) {

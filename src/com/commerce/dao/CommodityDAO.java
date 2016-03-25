@@ -9,4 +9,8 @@ public interface CommodityDAO {
 
 	public List listAllCommodities();
 
+	public List listCommoditiesByPage(int pageNumber, int pageSize);
+
+	public int getSizeOfCommodities(String query);
+
 }

@@ -14,11 +14,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
-import com.commerce.model.Commodity;
+import com.commerce.model.vo.CommodityVO;
 
 public class CommodityListExcelView extends AbstractExcelView {
 
-	private List<Commodity> list;
+	private List<CommodityVO> list;
 
 	public CommodityListExcelView(Object AttributeValue) {
 		this.list = (List) AttributeValue;
@@ -57,13 +57,13 @@ public class CommodityListExcelView extends AbstractExcelView {
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 
-				Commodity c = (Commodity) list.get(i);
+				CommodityVO c = (CommodityVO) list.get(i);
 				row = sheet.createRow(rowCount++);
 				colCount = 0;
 				row.createCell(colCount++).setCellValue(c.getName());
 				row.createCell(colCount++).setCellValue(c.getDescription());
 
-				row.createCell(colCount++).setCellValue(c.getCategory().getName());
+				row.createCell(colCount++).setCellValue(c.getCategoryName());
 
 			}
 		}
