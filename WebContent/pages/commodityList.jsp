@@ -5,9 +5,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ page import="com.commerce.util.ServletHttpUtils"%>
-<%String basePath = ServletHttpUtils.getBasePath(request);
-%>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -84,7 +81,7 @@
       	$.ajax({
  	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1&pageSize="+pageSize,
  	      }).done(function(data) { 	    	  
- 	     	console.log(data);
+ 	     	console.log("test="+data);
  	        	var datalist=data.commodityList;
  	        	showData.empty();
  	        	var content;

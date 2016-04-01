@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="com.commerce.util.Constants"%>
   <%int pageSize = Constants.getPageSize();
 %>
@@ -56,6 +57,9 @@
 				type="password" name="password" class="form-control"
 				placeholder="Password" required>
 			
+				<input name="answer" />
+			   
+			
 				<input
 				type="hidden" name="pageNumber" value="1">
 			
@@ -69,6 +73,7 @@
 					Remember me
 				</label>
 			</div>
+			<img src="<c:url value="simpleCaptcha.png" />"><br />
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
 		</form:form>

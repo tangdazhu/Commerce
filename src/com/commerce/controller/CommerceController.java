@@ -9,15 +9,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.commerce.model.User;
 import com.commerce.service.CommodityManager;
 import com.commerce.service.UserManager;
+import com.commerce.util.Constants;
 import com.commerce.view.CommodityListExcelView;
 import com.commerce.view.CommodityListJsonView;
+
+import nl.captcha.Captcha;
 
 @RestController
 // @ImportResource("classpath:applicationContext.xml")
@@ -40,48 +42,57 @@ public class CommerceController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/commodityList", method = { RequestMethod.POST, RequestMethod.GET }, params = {
-			"pageNumber", "pageSize" })
-	public ModelAndView loginSubmit(@ModelAttribute("userForm") User user, Model model, HttpServletRequest request,
-			@RequestParam(value = "pageNumber") int pageNumber, @RequestParam(value = "pageSize") int pageSize)
-					throws Exception {
+	@RequestMapping(value = "/commodityList", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView loginSubmit(@ModelAttribute("userForm") User user, Model model, HttpServletRequest request)
+			throws Exception {
 
 		ModelAndView mv = new ModelAndView();
 
-		String suffix = getRequestSuffix(request);
-
 		String email = user.getEmail();
 		String password = user.getPassword();
+		String suffix = getRequestSuffix(request);
 
-		User dbuser = userManager.getUserByEmail(email);
+		if (suffix.equals("")) {
+			User dbuser = userManager.getUserByEmail(email);
 
+			Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
+			request.setCharacterEncoding("UTF-8");
+			String answer = request.getParameter("answer");
+			if ((answer != null) && !captcha.isCorrect(answer)) {
+				mv.setViewName("login");
+				return mv;
+			}
+
+			if (dbuser == null || !password.equals(dbuser.getPassword())) {
+				mv.setViewName("login");
+				return mv;
+			}
+		}
 		List l = null;
-		
-		if (pageSize == 0) {
+		String attributeName = "commodityList";
+
+		int pageNumber = getIntValueFromParam("pageNumber", request);
+
+		int pageSize = getIntValueFromParam("pageSize", request);
+		int totalPage = 1;
+
+		if (pageNumber == 0) {
 			l = commodityManager.listAllCommodities();
+			pageNumber = 1;
 		} else {
+			if (pageSize == 0)
+				pageSize = Constants.pageSize;
+
 			l = commodityManager.listCommoditiesByPage(pageNumber, pageSize);
 
 			int total = commodityManager.getSizeOfCommodities("");
-			int totalPage = (int) Math.ceil(total / pageSize);
-			mv.addObject("pageSize", pageSize);
-			mv.addObject("totalPage", totalPage);
-
-		}		
-
-		String attributeName = "commodityList";
-		Object attributeValue = l;
-
-		if (dbuser != null && password.equals(dbuser.getPassword())) {
-
-			mv.setViewName("commodityList");
-
-		} else {
-
-			mv.setViewName("login");
+			totalPage = (int) Math.ceil(total / pageSize);
 		}
+		mv.addObject("pageSize", pageSize);
+		mv.addObject("totalPage", totalPage);
+
 		model.asMap().clear();
-		deliverViewOnSuffix(mv, attributeName, attributeValue, suffix);
+		deliverViewOnSuffix(mv, attributeName, l, suffix);
 
 		return mv;
 	}
@@ -102,6 +113,7 @@ public class CommerceController {
 
 		if (suffix.equals("")) {
 			mv.addObject(attributeName, attributeValue);
+
 		} else if (suffix.equals("json")) {
 			mv.addObject(attributeName, attributeValue);
 			CommodityListJsonView view = new CommodityListJsonView();
@@ -111,6 +123,17 @@ public class CommerceController {
 			mv.setView(view);
 		} else if (suffix.equals("xml")) {
 		}
+
+	}
+
+	private int getIntValueFromParam(String param, HttpServletRequest request) {
+		int a = 0;
+		String aString = request.getParameter(param);
+		if (aString != null) {
+			Integer ia = Integer.valueOf(aString);
+			a = ia.intValue();
+		}
+		return a;
 
 	}
 
