@@ -20,6 +20,22 @@ public class CommodityDAOImpl implements CommodityDAO {
 	private EntityManager manager;
 
 	@Override
+	public Commodity getCommodityById(int id) {
+
+		Commodity c;
+
+		try {
+			c = (Commodity) manager.createQuery("from Commodity a  where a.id=:id")
+					.setParameter("id", id).getSingleResult();
+		} catch (NoResultException e) {
+			c = null;
+		}
+		;
+
+		return c;
+	}
+
+	@Override
 	public Commodity getCommodityByCategory(String name) {
 
 		Commodity c;

@@ -43,7 +43,7 @@
 
 	<div class="container" id="content">
 
-		<form class="form-signin" action="">
+		<form class="form-signin" action="/Commerce/commodityDetails" method="POST">
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -51,6 +51,8 @@
 						<th>Name</th>
 						<th>Description</th>
 						<th>Category</th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="page-result">
@@ -81,12 +83,12 @@
       	$.ajax({
  	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1&pageSize="+pageSize,
  	      }).done(function(data) { 	    	  
- 	     	console.log("test="+data);
- 	        	var datalist=data.commodityList;
+ 	     	   	var datalist=data.commodityList;
  	        	showData.empty();
  	        	var content;
  	        	for (var i = 0, len = datalist.length; i < len; i++) {
- 	        		 content = content + '<tr><td>'+datalist[i].id + "</td>"+'<td>'+datalist[i].name + "</td>"+'<td>'+datalist[i].description + "</td>"+'<td>'+datalist[i].categoryName + "</td>"+ '</tr>';                
+ 	        		 content = content + '<tr><td>'+datalist[i].id + '</td>'+'<td>'+datalist[i].name + '</td>'+'<td>'+datalist[i].description + '</td>'+'<td>'+datalist[i].categoryName + '</td>'+'<td>'+'<a href=\"/Commerce/commodityDetails/'+datalist[i].id+'">'+'Edit</a>'+'</td>'+ '</tr>';
+ 	        		 console.log(content);
  	            }  	        
  	        	    	        
  	           showData.append(content);
@@ -121,8 +123,7 @@
         	showData.empty();
         	var content;
         	for (var i = 0, len = datalist.length; i < len; i++) {
-        		 content = content + '<tr><td>'+datalist[i].id + "</td>"+'<td>'+datalist[i].name + "</td>"+'<td>'+datalist[i].description + "</td>"+'<td>'+datalist[i].categoryName + "</td>"+ '</tr>';                
-            }  	        
+        		 content = content + '<tr><td>'+datalist[i].id + '</td>'+'<td>'+datalist[i].name + '</td>'+'<td>'+datalist[i].description + '</td>'+'<td>'+datalist[i].categoryName + '</td>'+'<td>'+'<a href=\"/Commerce/commodityDetails/'+datalist[i].id+'">'+'Edit</a>'+'</td>'+ '</tr>';            }  	        
         	    	        
            showData.append(content);
         	    	  

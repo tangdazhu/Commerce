@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.commerce.model.Commodity;
 import com.commerce.model.User;
 import com.commerce.service.CommodityManager;
 import com.commerce.service.UserManager;
@@ -36,9 +38,16 @@ public class CommerceController {
 
 		ModelAndView mv = new ModelAndView();
 
-		mv.addObject("message", "	Hello World!");
-
 		mv.setViewName("login");
+		return mv;
+	}
+
+	@RequestMapping(value = "/commodityDetails/{id}", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView commodityDetails(@PathVariable("id") int id,Model model, HttpServletRequest request) throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Commodity c=commodityManager.getCommodityById(id);
+		mv.addObject("commodity",c);
+        mv.setViewName("commodityDetails");
 		return mv;
 	}
 

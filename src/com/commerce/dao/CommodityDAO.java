@@ -13,4 +13,6 @@ public interface CommodityDAO {
 
 	public int getSizeOfCommodities(String query);
 
+	public Commodity getCommodityById(int id);
+
 }

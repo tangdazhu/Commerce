@@ -18,6 +18,12 @@ public class CommodityManagerImpl implements CommodityManager {
 	@Autowired
 	private CommodityDAO commodityDAO;
 
+	public Commodity getCommodityById(int id) {
+		Commodity c = commodityDAO.getCommodityById(id);
+
+		return c;
+	}
+
 	public Commodity getCommodityByCategory(String name) {
 		Commodity c = commodityDAO.getCommodityByCategory(name);
 
