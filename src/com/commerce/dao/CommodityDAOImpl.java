@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.commerce.model.Commodity;
 
 @Repository
-@Transactional
 public class CommodityDAOImpl implements CommodityDAO {
 
-	@PersistenceContext()
+	@PersistenceContext(type=PersistenceContextType.EXTENDED)
 	private EntityManager manager;
 
+	@Override
+	@Transactional
+	public void updateCommodity(Commodity c) {
+		manager.merge(c);
+		manager.flush();
+		
+	}
+	
 	@Override
 	public Commodity getCommodityById(int id) {
 
@@ -103,5 +111,7 @@ public class CommodityDAOImpl implements CommodityDAO {
 
 		return list;
 	}
+
+
 
 }

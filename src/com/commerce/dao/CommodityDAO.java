@@ -15,4 +15,6 @@ public interface CommodityDAO {
 
 	public Commodity getCommodityById(int id);
 
+	public void updateCommodity(Commodity c);
+
 }

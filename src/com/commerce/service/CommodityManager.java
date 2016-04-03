@@ -15,4 +15,6 @@ public interface CommodityManager {
 	public int getSizeOfCommodities(String query);
 	
 	public Commodity getCommodityById(int id);
+
+	public void updateCommodity(Commodity c);
 }

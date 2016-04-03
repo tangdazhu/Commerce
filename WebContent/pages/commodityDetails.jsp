@@ -43,7 +43,7 @@
 
 	<div class="container" id="content">
 
-		<form class="form-signin" action="/Commerce/commodityDetails"
+		<form class="form-signin" action="/Commerce/updateCommodity"
 			method="POST">
 			<table class="table table-hover">
 				<thead>
@@ -57,16 +57,17 @@
 				<tbody id="page-result">
 
 					<tr>
-						<td>${commodity.id}</td>
-						<td>${commodity.name}</td>
-						<td>${commodity.description}</td>
+						<td><input type="text" value="${commodity.id}" name="id" readonly="readonly"/></td>
+						<td><input type="text" value="${commodity.name}" name="name" /></td>
+						<td><input type="text" value="${commodity.description}" name="description" /></td>
 						<td>${commodity.category.name}</td>
 					</tr>
 
 
 				</tbody>
-			</table>
 
+			</table>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
 		</form>
 
 	</div>

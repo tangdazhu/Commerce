@@ -42,12 +42,28 @@ public class CommerceController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/commodityDetails/{id}", method = { RequestMethod.POST, RequestMethod.GET })
-	public ModelAndView commodityDetails(@PathVariable("id") int id,Model model, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/updateCommodity", method = { RequestMethod.POST })
+	public ModelAndView updateCommodity(Model model, HttpServletRequest request) throws Exception {
 		ModelAndView mv = new ModelAndView();
-		Commodity c=commodityManager.getCommodityById(id);
-		mv.addObject("commodity",c);
-        mv.setViewName("commodityDetails");
+		int id = this.getIntValueFromParam("id", request);
+		String name = request.getParameter("name");
+		String desp = request.getParameter("description");
+		Commodity c = commodityManager.getCommodityById(id);
+		c.setName(name);
+		c.setDescription(desp);
+		commodityManager.updateCommodity(c);
+		mv.addObject("commodity", c);
+		mv.setViewName("commodityDetails");
+		return mv;
+	}
+
+	@RequestMapping(value = "/commodityDetails/{id}", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView commodityDetails(@PathVariable("id") int id, Model model, HttpServletRequest request)
+			throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Commodity c = commodityManager.getCommodityById(id);
+		mv.addObject("commodity", c);
+		mv.setViewName("commodityDetails");
 		return mv;
 	}
 

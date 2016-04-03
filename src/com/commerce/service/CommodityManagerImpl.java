@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.commerce.dao.CommodityDAO;
-import com.commerce.model.Category;
 import com.commerce.model.Commodity;
 import com.commerce.model.vo.CommodityVO;
 
 @Component
 @Service
+@Transactional
+@Scope(proxyMode = ScopedProxyMode.INTERFACES)
 public class CommodityManagerImpl implements CommodityManager {
 	@Autowired
 	private CommodityDAO commodityDAO;
@@ -24,6 +28,12 @@ public class CommodityManagerImpl implements CommodityManager {
 		return c;
 	}
 
+	@Override	
+	public void updateCommodity(Commodity c) {
+		commodityDAO.updateCommodity(c);
+	}
+
+	@Override
 	public Commodity getCommodityByCategory(String name) {
 		Commodity c = commodityDAO.getCommodityByCategory(name);
 

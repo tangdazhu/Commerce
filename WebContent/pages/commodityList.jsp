@@ -43,7 +43,7 @@
 
 	<div class="container" id="content">
 
-		<form class="form-signin" action="/Commerce/commodityDetails" method="POST">
+		<form class="form-signin" action="" method="POST">
 			<table class="table table-hover">
 				<thead>
 					<tr>
