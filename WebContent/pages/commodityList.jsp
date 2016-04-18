@@ -81,7 +81,7 @@
 
     $( window ).load(function() {
       	$.ajax({
- 	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber=1&pageSize="+pageSize,
+ 	       url: "/Commerce/commodityList.json?pageNumber=1&pageSize="+pageSize,
  	      }).done(function(data) { 	    	  
  	     	   	var datalist=data.commodityList;
  	        	showData.empty();
@@ -115,7 +115,7 @@
         }).on("page", function(event, /* page number here */ num){
 
         	$.ajax({
-        	       url: "http://localhost:8080/Commerce/commodityList.json?pageNumber="+num+"&pageSize="+pageSize ,
+        	       url: "/Commerce/commodityList.json?pageNumber="+num+"&pageSize="+pageSize ,
         	      }).done(function(data) {
     
         	
