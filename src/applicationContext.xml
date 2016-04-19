@@ -24,7 +24,7 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
 </bean>
 
 <bean id="defaultPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
-<property name="persistenceXmlLocation" value="${persistence_windows}"/>
+<property name="persistenceXmlLocation" value="${persistence}"/>
 <!--comment dataSourceLooup to use jndi  -->
 <property name="dataSourceLookup">
 <bean class="org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup" />
