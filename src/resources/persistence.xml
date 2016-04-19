@@ -14,6 +14,7 @@
 <property name="hibernate.connection.password" value="mysql" />
 <property name="hibernate.connection.url" value="jdbc:mysql://192.168.204.131:3306/commercedb?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false" />
 
+
 <!--设置外连接抓取树的最大深度 -->
 <property name="hibernate.max_fetch_depth" value="3" />
 <!--自动输出schema创建DDL语句 -->

@@ -19,9 +19,12 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
 <context:component-scan base-package="com.commerce.dao"/>
 <context:component-scan base-package="com.commerce.service"/>
 
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<property name="location" value="classpath:resources/app.properties"/>
+</bean>
 
 <bean id="defaultPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
-<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+<property name="persistenceXmlLocation" value="${persistence_windows}"/>
 <!--comment dataSourceLooup to use jndi  -->
 <property name="dataSourceLookup">
 <bean class="org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup" />
