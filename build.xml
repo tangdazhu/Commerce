@@ -38,6 +38,7 @@
 		<copy todir="${build.dir}">
 		  <fileset dir="${src.dir}">
 		  	<include name="**/*.xml" />
+		  	<include name="**/*.properties" />
 		    <exclude name="**/*.java"/>
 		  </fileset>
 		</copy>
@@ -77,6 +78,22 @@
 
 	</target>
 
+	<target name="remoteDockerDeploywar" depends="config4Docker,build" description="Deploy application as a WAR file">
+		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.dir}">
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+		<scp file="${name}.war" todir="dztang@${remoteHost.IP}:/home/dztang/tomcat_mapping/webapps" password="tdz0001" trust="true" />
+
+	</target>
+			
+	<target name="config4Docker">
+		<propertyfile file="${src.dir}/resources/app.properties" >
+		     <entry key="persistence"   type="string"  value="classpath:resources/persistence_docker.xml" />
+		 
+		  </propertyfile>
+	</target>
 
 	<target name="clean" description="Clean output directories">
 		<delete>

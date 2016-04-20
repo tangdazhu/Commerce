@@ -1,0 +1,32 @@
+
+portal:
+  image: nginx
+  ports:
+   - "8080:80"
+  volumes:
+   - /home/dztang/cluster/default.conf:/etc/nginx/conf.d/default.conf
+  links:
+   - tomcatOne:tomcat1
+   - tomcatTwo:tomcat2
+   - tomcatThree:tomcat3
+
+tomcatOne:
+  image: mytomcat:8.0
+  volumes:
+   - /home/dztang/tomcat_mapping/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+   - /home/dztang/tomcat_mapping/webapps:/usr/local/tomcat/webapps
+   - /home/dztang/tomcat_mapping/logs:/usr/local/tomcat/logs
+
+tomcatTwo:
+  image: mytomcat:8.0
+  volumes:
+   - /home/dztang/tomcat_mapping/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+   - /home/dztang/tomcat_mapping/webapps:/usr/local/tomcat/webapps
+   - /home/dztang/tomcat_mapping/logs:/usr/local/tomcat/logs
+
+tomcatThree:
+  image: mytomcat:8.0
+  volumes:
+   - /home/dztang/tomcat_mapping/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+   - /home/dztang/tomcat_mapping/webapps:/usr/local/tomcat/webapps
+   - /home/dztang/tomcat_mapping/logs:/usr/local/tomcat/logs
