@@ -1,4 +1,4 @@
-package test;
+package dataImport;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

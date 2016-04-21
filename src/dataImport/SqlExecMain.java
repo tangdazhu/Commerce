@@ -1,7 +1,9 @@
-package test;
+package dataImport;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import test.CommodistTemplate;
 
 public class SqlExecMain {
 	
