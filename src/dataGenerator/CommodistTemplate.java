@@ -1,4 +1,4 @@
-package dataImport;
+package dataGenerator;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
