@@ -12,7 +12,7 @@
 <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
 <property name="hibernate.connection.username" value="mysql" />
 <property name="hibernate.connection.password" value="mysql" />
-<property name="hibernate.connection.url" value="jdbc:mysql://192.168.204.131:3306/commercedb?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false" />
+<property name="hibernate.connection.url" value="jdbc:mysql://192.168.204.139:3306/commercedb?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false" />
 
 
 <!--设置外连接抓取树的最大深度 -->

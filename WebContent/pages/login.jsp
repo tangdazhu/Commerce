@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="com.commerce.util.Constants"%>
-  <%int pageSize = Constants.getPageSize();
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.net.*"%>
+<%@page import="java.util.List"%>
+<%
+	int pageSize = Constants.getPageSize();
 %>
-  
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -42,42 +47,45 @@
 
 	<div class="container">
 
-		<form:form class="form-signin" action="/Commerce/commodityList" method="POST" modelAttribute="userForm">
+		<form:form class="form-signin" action="/Commerce/commodityList"
+			method="POST" modelAttribute="userForm">
 			<h2 class="form-signin-heading">Please sign in</h2>
-			<label for="inputEmail" class="sr-only">Email address</label> 
-			
-			<input
-				type="email" name="email" class="form-control"
-				placeholder="Email address" required autofocus> 
-				
-				<label
-				for="inputPassword" class="sr-only">Password</label> 
-			
-				<input
-				type="password" name="password" class="form-control"
+			<label for="inputEmail" class="sr-only">Email address</label>
+
+			<input type="email" name="email" class="form-control"
+				placeholder="Email address" required autofocus>
+
+			<label for="inputPassword" class="sr-only">Password</label>
+
+			<input type="password" name="password" class="form-control"
 				placeholder="Password" required>
-			
-				<input name="answer" />
-			   
-			
-				<input
-				type="hidden" name="pageNumber" value="1">
-			
-			
-				<input
-				type="hidden" name="pageSize" value="<%=pageSize%>">			
-			
-			
+
+			<input name="answer" />
+
+
+			<input type="hidden" name="pageNumber" value="1">
+
+
+			<input type="hidden" name="pageSize" value="<%=pageSize%>">
+
+
 			<div class="checkbox">
 				<label> <input type="checkbox" value="remember-me">
 					Remember me
 				</label>
 			</div>
-			<img src="<c:url value="simpleCaptcha.png" />"><br />
+			<img src="<c:url value="simpleCaptcha.png" />">
+			<br />
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
 		</form:form>
-
+		<FONT size=3 COLOR="#0000FF"> Instance <%=InetAddress.getLocalHost()%>
+		</FONT> <FONT size=3 COLOR="#CC0000"> <br /> Session Id : <%=request.getSession().getId()%>
+			<br /> Is it New Session : <%=request.getSession().isNew()%><br />
+			Session Creation Date : <%=new Date(request.getSession().getCreationTime())%><br />
+			Session Access Date : <%=new Date(request.getSession().getLastAccessedTime())%><br />
+			<br />
+		</FONT>
 	</div>
 	<!-- /container -->
 

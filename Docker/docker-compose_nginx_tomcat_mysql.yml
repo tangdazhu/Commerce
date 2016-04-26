@@ -1,0 +1,53 @@
+
+
+portal:
+
+  image: mkodockx/docker-nginx-proxy
+
+  container_name: nginx
+
+  ports:
+
+   - "8080:80"
+
+  volumes:
+
+   - /var/run/docker.sock:/tmp/docker.sock:ro 
+
+  links:
+
+   - tomcat  
+
+
+
+mysql:
+
+  image: mysql/mysql-server:5.7
+
+  ports:
+
+   - "3306:3306"
+
+  container_name: mysql5.7
+
+  volumes:
+
+   - /home/dztang/mysql_data:/var/lib/mysql
+
+  env_file: /home/dztang/mysql.env
+
+
+
+tomcat:
+
+  image: mytomcat:8.0
+
+  volumes:
+
+   - /home/dztang/tomcat_mapping/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+
+   - /home/dztang/tomcat_mapping/webapps:/usr/local/tomcat/webapps
+
+   - /home/dztang/tomcat_mapping/logs:/usr/local/tomcat/logs
+
+  env_file: /home/dztang/comm.env

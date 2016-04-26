@@ -4,7 +4,7 @@ portal:
   ports:
    - "8080:80"
   volumes:
-   - /home/dztang/cluster/nginx.conf::/etc/nginx/nginx.conf:ro
+   - /home/dztang/cluster/nginx.conf:/etc/nginx/nginx.conf:ro
   links:
    - tomcatOne:tomcat1
    - tomcatTwo:tomcat2
