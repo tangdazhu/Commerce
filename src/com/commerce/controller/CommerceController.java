@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.commerce.model.Commodity;
+import com.commerce.model.Transaction;
 import com.commerce.model.User;
 import com.commerce.service.CommodityManager;
+import com.commerce.service.TransactionManager;
 import com.commerce.service.UserManager;
 import com.commerce.util.Constants;
 import com.commerce.view.CommodityListExcelView;
@@ -33,12 +35,31 @@ public class CommerceController {
 	@Autowired(required = true)
 	private CommodityManager commodityManager;
 
+	@Autowired(required = true)
+	private TransactionManager transManager;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView login(@ModelAttribute("userForm") User user) throws Exception {
 
 		ModelAndView mv = new ModelAndView();
 
 		mv.setViewName("login");
+		return mv;
+	}
+
+	@RequestMapping(value = "/commodityBuy/{id}", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView commodityBuy(@PathVariable("id") int id, Model model, HttpServletRequest request)
+			throws Exception {
+		ModelAndView mv = new ModelAndView();
+		User user = (User) request.getSession().getAttribute("user");
+		Commodity c = commodityManager.getCommodityById(id);
+		Transaction t = new Transaction();
+		t.setAddress("my_address");
+		t.setCommodity(c);
+		t.setUser(user);
+		transManager.insertTrans(t);
+
+		mv.setViewName("success");
 		return mv;
 	}
 
@@ -53,7 +74,7 @@ public class CommerceController {
 		c.setDescription(desp);
 		commodityManager.updateCommodity(c);
 		mv.addObject("commodity", c);
-		mv.setViewName("commodityDetails");
+		mv.setViewName("success");
 		return mv;
 	}
 
@@ -76,6 +97,7 @@ public class CommerceController {
 		String email = user.getEmail();
 		String password = user.getPassword();
 		String suffix = getRequestSuffix(request);
+		String type = "seller";
 
 		if (suffix.equals("")) {
 			User dbuser = userManager.getUserByEmail(email);
@@ -83,7 +105,7 @@ public class CommerceController {
 			Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
 			request.setCharacterEncoding("UTF-8");
 			String answer = request.getParameter("answer");
-			if ((answer != null) && !captcha.isCorrect(answer)) {
+			if ((answer != null) && ((captcha != null)) && !captcha.isCorrect(answer)) {
 				mv.setViewName("login");
 				return mv;
 			}
@@ -92,9 +114,16 @@ public class CommerceController {
 				mv.setViewName("login");
 				return mv;
 			}
+			type = dbuser.getType();
+			request.getSession().setAttribute("user", dbuser);
 		}
 		List l = null;
 		String attributeName = "commodityList";
+
+		if (type.equals("buyer"))
+			mv.setViewName("commodityListBuyer");
+		else
+			mv.setViewName("commodityList");
 
 		int pageNumber = getIntValueFromParam("pageNumber", request);
 

@@ -22,14 +22,16 @@ public class User implements java.io.Serializable {
 	private String name;
 	private String password;
 	private String email;
+	private String type;
 
 	public User() {
 	}
 
-	public User(String name, String password, String email) {
+	public User(String name, String password, String email,String type) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
+		this.type=type;
 	}
 
 	@Id
@@ -69,5 +71,14 @@ public class User implements java.io.Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	@Column(name = "type")
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 
 }
