@@ -2,9 +2,13 @@ package com.commerce.controller;
 
 import java.util.List;
 
+import javax.jms.Destination;
+import javax.jms.Queue;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +42,9 @@ public class CommerceController {
 	@Autowired(required = true)
 	private TransactionManager transManager;
 
+	@Autowired(required = true)
+	private JmsTemplate jmsTemplate;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView login(@ModelAttribute("userForm") User user) throws Exception {
 
@@ -58,6 +65,12 @@ public class CommerceController {
 		t.setCommodity(c);
 		t.setUser(user);
 		transManager.insertTrans(t);
+		
+		//put message queue
+		Queue queue = new ActiveMQQueue("CommodityOrderQueue");
+	
+		MessageProducer p=new MessageProducer(jmsTemplate, queue);
+		p.putMessage();
 
 		mv.setViewName("success");
 		return mv;
@@ -190,5 +203,7 @@ public class CommerceController {
 		return a;
 
 	}
+	
+	
 
 }
