@@ -13,7 +13,7 @@ import com.commerce.model.Category;
 @Transactional
 public class CategoryDAOImpl implements CategoryDAO {
 
-	@PersistenceContext()
+	@PersistenceContext(unitName="mysqlEntityManagerFactory")
 	private EntityManager manager;
 
 

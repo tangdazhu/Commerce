@@ -9,7 +9,7 @@ import com.commerce.model.Transaction;
 
 @Component
 @Service
-public class TransactionManagerImpl implements TransactionManager {
+public class TransactionManagerImpl implements TransManager {
 	@Autowired
 	private TransactionDAO transDAO;
 

@@ -2,13 +2,13 @@ package com.commerce.controller;
 
 import java.util.List;
 
-import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +21,8 @@ import com.commerce.model.Commodity;
 import com.commerce.model.Transaction;
 import com.commerce.model.User;
 import com.commerce.service.CommodityManager;
-import com.commerce.service.TransactionManager;
+import com.commerce.service.SendMsgManager;
+import com.commerce.service.TransManager;
 import com.commerce.service.UserManager;
 import com.commerce.util.Constants;
 import com.commerce.view.CommodityListExcelView;
@@ -40,10 +41,10 @@ public class CommerceController {
 	private CommodityManager commodityManager;
 
 	@Autowired(required = true)
-	private TransactionManager transManager;
+	private TransManager transManager;
 
 	@Autowired(required = true)
-	private JmsTemplate jmsTemplate;
+	private SendMsgManager sendMsgManager;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView login(@ModelAttribute("userForm") User user) throws Exception {
@@ -55,22 +56,22 @@ public class CommerceController {
 	}
 
 	@RequestMapping(value = "/commodityBuy/{id}", method = { RequestMethod.POST, RequestMethod.GET })
+	@Transactional(value = "JtaTransactionManager", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public ModelAndView commodityBuy(@PathVariable("id") int id, Model model, HttpServletRequest request)
 			throws Exception {
 		ModelAndView mv = new ModelAndView();
 		User user = (User) request.getSession().getAttribute("user");
 		Commodity c = commodityManager.getCommodityById(id);
-		Transaction t = new Transaction();
-		t.setAddress("my_address");
-		t.setCommodity(c);
-		t.setUser(user);
-		transManager.insertTrans(t);
-		
-		//put message queue
+		 Transaction t = new Transaction();
+		 t.setAddress("my_address");
+		 t.setCommodity(c);
+		 t.setUser(user);
+		 transManager.insertTrans(t);
+
+		// put message queue
 		Queue queue = new ActiveMQQueue("CommodityOrderQueue");
-	
-		MessageProducer p=new MessageProducer(jmsTemplate, queue);
-		p.putMessage();
+
+		this.sendMsgManager.putMessage(queue);
 
 		mv.setViewName("success");
 		return mv;
@@ -203,7 +204,5 @@ public class CommerceController {
 		return a;
 
 	}
-	
-	
 
 }

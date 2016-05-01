@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.commerce.model.Transaction;
@@ -11,7 +12,7 @@ import com.commerce.model.Transaction;
 @Repository
 @Transactional
 public class TransactionDAOImpl implements TransactionDAO {
-	@PersistenceContext()
+	@PersistenceContext(unitName="mysqlEntityManagerFactory")
 	private EntityManager manager;
 
 	@Override

@@ -23,30 +23,73 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
 <property name="location" value="classpath:resources/app.properties"/>
 </bean>
 
-<bean id="defaultPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
-<property name="persistenceXmlLocation" value="${persistence}"/>
-<!--comment dataSourceLooup to use jndi  -->
-<property name="dataSourceLookup">
-<bean class="org.springframework.jdbc.datasource.lookup.BeanFactoryDataSourceLookup" />
-</property>
-</bean>
 
-<!-- 整合mysqljpa  -->
-<bean id="mysqlEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-<property name="persistenceUnitManager" ref="defaultPersistenceUnitManager"></property>
-<property name="persistenceUnitName" value="mysqldb"></property>
-<property name="jpaVendorAdapter">
-<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-<property name="showSql" value="true"></property>
-<property name="database" value="MYSQL"></property>
-</bean>
-</property>
-</bean>
+<bean id="mysqlDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+    <property name="uniqueResourceName" value="${dataSource.uniqueName}" />
+    <property name="maxPoolSize" value="5" />
+    <property name="minPoolSize" value="1" />
+    <property name="maxIdleTime" value="60" />
+    <property name="maintenanceInterval" value="60" />
+    <property name="reapTimeout" value="0" />
+    <property name="testQuery" value="select 1 from dual" />
+    <property name="xaDataSource" ref="mysqlDS" />
+  </bean>
+ 
+  <bean id="mysqlDS" class="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" lazy-init="true">
+    <property name="pinGlobalTxToPhysicalConnection" value="true" />
+    <property name="user" value="${dataSource.DB_USER}" />
+    <property name="password" value="${dataSource.DB_PASSWORD}" />
+    <property name="URL" value="${dataSource.DB_URL}" />
+  </bean>     
+   
+ <bean id="mysqlEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="mysqlDataSource" />
+   
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+            
+                <!-- Setup Hibernate to participate in the Atomikos transaction -->
+                <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosPlatform</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				                <!--设置外连接抓取树的最大深度 -->
+				<prop key="hibernate.max_fetch_depth">3</prop>
+				<!--自动输出schema创建DDL语句 -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true"</prop>
+				
+            </props>
+        </property>
+    </bean>
+    
+        <!-- Atomikos JTA transaction manager -->
+    <bean id="JtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="allowCustomIsolationLevels" value="true"/>
+
+        <property name="transactionManager">
+            <bean class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
+                <property name="forceShutdown" value="false"/>
+            </bean>
+        </property>
+
+        <property name="userTransaction">
+            <bean class="com.atomikos.icatch.jta.UserTransactionImp">
+                <property name="transactionTimeout" value="300"/>
+            </bean>
+        </property>
+    </bean>
+    
+<!-- 
 <bean id="mysqltransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 <property name="entityManagerFactory" ref="mysqlEntityManagerFactory" />
 <qualifier value="mysqlEM"/>
 </bean>
-<tx:annotation-driven transaction-manager="mysqltransactionManager" proxy-target-class="false"/>
+ -->
+ 
+<tx:annotation-driven transaction-manager="JtaTransactionManager" proxy-target-class="false"/>
 
     <!-- This resolves messages from resource bundles for different locales --> 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -74,33 +117,29 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
  -->
 
 	<!-- a pooling based JMS provider -->
-	<bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
-		destroy-method="stop">
-		<property name="connectionFactory">
-			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
-				<property name="brokerURL">
-					<value>${activemq.URL}</value>
-				</property>
-	<property name="userName" value="${activemq.user}" />
-
-	<property name="password" value="${activemq.password}" />
-			</bean>
-		</property>
-	</bean>
-
-	
-	<bean id="defaultDestination" class="org.apache.activemq.command.ActiveMQQueue">
-		<!-- name of the queue -->
-		<constructor-arg index="0" value="CommodityOrderQueue" />
-	</bean>
-	
-	<!-- Spring JMS Template -->
-	<bean id="myJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory" ref="jmsFactory" />
-		<property name="defaultDestination" ref="defaultDestination" />
-	</bean>
-
-
+	<!-- ActiveMQ connection factory -->
+    <!-- JTA/XA-enabled JMS -->
+   
+    <bean id="atomikosJmsConnectionFactory" class="com.atomikos.jms.AtomikosConnectionFactoryBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="ActiveMQXA" />
+        <property name="xaConnectionFactory">
+            <bean class="org.apache.activemq.ActiveMQXAConnectionFactory">
+                <property name="brokerURL" value="${activemq.URL}" />
+				<property name="userName" value="${activemq.user}" />
+				<property name="password" value="${activemq.password}" />
+            </bean>
+        </property>
+        <property name="maxPoolSize" value="40" />
+    </bean>
  
-
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="atomikosJmsConnectionFactory" />
+        <property name="receiveTimeout" value="2000" />
+         <!-- "sessionTransacted" has to be set to "true" to start an transaction for every incoming JMS message -->
+        <property name="sessionTransacted" value="true" />
+        <!-- sessionAcknowledgeMode has to be set to javax.jms.Session.SESSION_TRANSACTED -->
+        <property name="sessionAcknowledgeMode" value="0" />
+    </bean>
+    
+    
 </beans>

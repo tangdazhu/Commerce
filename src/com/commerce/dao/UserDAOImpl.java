@@ -13,7 +13,7 @@ import com.commerce.model.User;
 @Transactional
 public class UserDAOImpl implements UserDAO {
 
-	@PersistenceContext()
+	@PersistenceContext(unitName="mysqlEntityManagerFactory")
 	private EntityManager manager;
 
 	public User getUserByEmail(String email) {

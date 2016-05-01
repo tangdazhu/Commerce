@@ -16,7 +16,7 @@ import com.commerce.model.Commodity;
 @Repository
 public class CommodityDAOImpl implements CommodityDAO {
 
-	@PersistenceContext(type=PersistenceContextType.EXTENDED)
+	@PersistenceContext(unitName="mysqlEntityManagerFactory")
 	private EntityManager manager;
 
 	@Override
