@@ -58,8 +58,7 @@
 		<servlet-name>SimpleCaptcha</servlet-name>
 		<url-pattern>/simpleCaptcha.png</url-pattern>
 	</servlet-mapping>
-	
-	
+
 <!-- 
 <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

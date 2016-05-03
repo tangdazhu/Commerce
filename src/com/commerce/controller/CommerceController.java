@@ -72,6 +72,7 @@ public class CommerceController {
 		Queue queue = new ActiveMQQueue("CommodityOrderQueue");
 
 		this.sendMsgManager.putMessage(queue);
+		
 
 		mv.setViewName("success");
 		return mv;

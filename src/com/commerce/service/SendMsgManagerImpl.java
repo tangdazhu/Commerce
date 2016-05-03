@@ -1,20 +1,21 @@
 package com.commerce.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.commerce.controller.MyException;
 
 @Component
 @Service
@@ -39,6 +40,7 @@ public class SendMsgManagerImpl implements SendMsgManager {
 				}
 			});
 		}
+		throw new MyException ("test");
 
 	}
 

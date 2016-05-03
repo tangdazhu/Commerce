@@ -18,7 +18,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 	@Override
 	public int insertTrans(Transaction t) {
 		manager.persist(t);
-		manager.flush();
+		//manager.flush();
 		return 1;
 	}
 
