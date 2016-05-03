@@ -62,14 +62,14 @@ http://www.springframework.org/schema/data/jpa http://www.springframework.org/sc
         <!-- IMPORTANT: specify all Atomikos properties here --> 
         <props> 
                 <prop key="com.atomikos.icatch.service">com.atomikos.icatch.standalone.UserTransactionServiceFactory</prop>
-                <prop key="com.atomikos.icatch.tm_unique_name">my-unique-tm-name-for-project1</prop>
+                <prop key="com.atomikos.icatch.tm_unique_name">commerce-project</prop>
                 <prop key="com.atomikos.icatch.log_base_name">tmlog</prop>
-                <prop key="com.atomikos.icatch.log_base_dir">c:/</prop>
+                <prop key="com.atomikos.icatch.log_base_dir">${atomikos.log_base_dir}</prop>
                 
                 <!-- DEBUGGING PROPERTIES -->
-                <prop key="com.atomikos.icatch.output_dir">c:/</prop>
+                <prop key="com.atomikos.icatch.output_dir">${atomikos.output_dir}</prop>
                 <prop key="com.atomikos.icatch.console_file_name">atomikos.log</prop>
-                <prop key="com.atomikos.icatch.console_log_level">INFO</prop>
+                <prop key="com.atomikos.icatch.console_log_level">DEBUG</prop>
                 <prop key="com.atomikos.icatch.threaded_2pc">true</prop>
      
         </props> 

@@ -40,7 +40,7 @@ public class SendMsgManagerImpl implements SendMsgManager {
 				}
 			});
 		}
-		throw new MyException ("test");
+		//if (true) {throw new MyException ("test");}
 
 	}
 

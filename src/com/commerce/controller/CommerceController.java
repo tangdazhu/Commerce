@@ -1,5 +1,6 @@
 package com.commerce.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.jms.Queue;
@@ -10,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.commerce.model.Commodity;
 import com.commerce.model.Transaction;
@@ -30,6 +33,7 @@ import com.commerce.view.CommodityListJsonView;
 
 import nl.captcha.Captcha;
 
+@EnableWebMvc
 @RestController
 // @ImportResource("classpath:applicationContext.xml")
 public class CommerceController {
@@ -56,23 +60,22 @@ public class CommerceController {
 	}
 
 	@RequestMapping(value = "/commodityBuy/{id}", method = { RequestMethod.POST, RequestMethod.GET })
-	@Transactional(value = "JtaTransactionManager", propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Transactional(value = "JtaTransactionManager", propagation = Propagation.REQUIRED)
 	public ModelAndView commodityBuy(@PathVariable("id") int id, Model model, HttpServletRequest request)
 			throws Exception {
 		ModelAndView mv = new ModelAndView();
 		User user = (User) request.getSession().getAttribute("user");
 		Commodity c = commodityManager.getCommodityById(id);
-		 Transaction t = new Transaction();
-		 t.setAddress("my_address");
-		 t.setCommodity(c);
-		 t.setUser(user);
-		 transManager.insertTrans(t);
+		Transaction t = new Transaction();
+		t.setAddress("my_address");
+		t.setCommodity(c);
+		t.setUser(user);
+		transManager.insertTrans(t);
 
 		// put message queue
 		Queue queue = new ActiveMQQueue("CommodityOrderQueue");
 
 		this.sendMsgManager.putMessage(queue);
-		
 
 		mv.setViewName("success");
 		return mv;
@@ -192,6 +195,24 @@ public class CommerceController {
 			mv.setView(view);
 		} else if (suffix.equals("xml")) {
 		}
+
+	}
+
+	/*
+	 * Only handle MyException, the others will go for GlobalDefaultException
+	 */
+	@ExceptionHandler(MyException.class)
+	public ModelAndView handleAllException(HttpServletRequest req, Exception exception) {
+
+		ModelAndView mav = new ModelAndView("exception");
+		java.util.Date date = new java.util.Date();
+
+		mav.addObject("timestamp", new Timestamp(date.getTime()));
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURL());
+		mav.setViewName("myexception");
+
+		return mav;
 
 	}
 
