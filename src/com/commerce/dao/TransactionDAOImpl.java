@@ -18,7 +18,7 @@ public class TransactionDAOImpl implements TransactionDAO {
 	public int insertTrans(Transaction t)  {
 		manager.persist(t);
 		//manager.flush();
-		if (true) {throw new RuntimeException("test") ;}
+		//if (true) {throw new RuntimeException("test") ;}
 	return 1;
 	}
 

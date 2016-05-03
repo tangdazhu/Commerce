@@ -3,13 +3,16 @@ package com.commerce.controller;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.jms.Queue;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.UserTransaction;
 
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,6 +53,9 @@ public class CommerceController {
 	@Autowired(required = true)
 	private SendMsgManager sendMsgManager;
 
+	@Resource(name = "JtaTransactionManager")
+	private JtaTransactionManager txManager;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView login(@ModelAttribute("userForm") User user) throws Exception {
 
@@ -64,21 +70,31 @@ public class CommerceController {
 	public ModelAndView commodityBuy(@PathVariable("id") int id, Model model, HttpServletRequest request)
 			throws Exception {
 		ModelAndView mv = new ModelAndView();
-		User user = (User) request.getSession().getAttribute("user");
-		Commodity c = commodityManager.getCommodityById(id);
-		Transaction t = new Transaction();
-		t.setAddress("my_address");
-		t.setCommodity(c);
-		t.setUser(user);
-		transManager.insertTrans(t);
+		UserTransaction userTx = this.txManager.getUserTransaction();
+		try {
+			userTx.begin();
 
-		// put message queue
-		Queue queue = new ActiveMQQueue("CommodityOrderQueue");
+			User user = (User) request.getSession().getAttribute("user");
+			Commodity c = commodityManager.getCommodityById(id);
+			Transaction t = new Transaction();
+			t.setAddress("my_address");
+			t.setCommodity(c);
+			t.setUser(user);
+			transManager.insertTrans(t);
 
-		this.sendMsgManager.putMessage(queue);
+			// put message queue
+			Queue queue = new ActiveMQQueue("CommodityOrderQueue");
 
-		mv.setViewName("success");
-		return mv;
+			this.sendMsgManager.putMessage(queue);
+
+			mv.setViewName("success");
+			userTx.commit();
+			return mv;
+
+		} catch (Exception e) {
+			userTx.rollback();
+			throw e;
+		}
 	}
 
 	@RequestMapping(value = "/updateCommodity", method = { RequestMethod.POST })
