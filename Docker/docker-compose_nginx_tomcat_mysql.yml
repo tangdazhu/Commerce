@@ -1,9 +1,5 @@
-
-
 portal:
-
   image: mkodockx/docker-nginx-proxy
-
   container_name: nginx
 
   ports:
@@ -17,7 +13,6 @@ portal:
   links:
 
    - tomcat  
-
 
 
 mysql:
@@ -51,3 +46,32 @@ tomcat:
    - /home/dztang/tomcat_mapping/logs:/usr/local/tomcat/logs
 
   env_file: /home/dztang/comm.env
+  
+activemq-1:
+  image: webcenter/activemq
+  ports:
+   - "8161:8161"
+   - "61616:61616" 
+   - "61613:61613" 
+  volumes:
+    - /home/dztang/active_mapping/data:/data/activemq 
+    - /home/dztang/active_mapping/log:/var/log/activemq 
+    - /home/dztang/active_mapping/conf:/opt/activemq/conf 
+    - /home/dztang/active_mapping/lib/mysql-connector-5.1.38.jar:/opt/activemq/lib/optional/mysql-connector-5.1.38.jar 
+    
+  env_file: /home/dztang/activemq.env
+   
+activemq-2:
+  image: webcenter/activemq
+  ports:
+   - "8162:8161"
+   - "61617:61616" 
+   - "61614:61613" 
+  volumes:
+    - /home/dztang/active_mapping/data:/data/activemq 
+    - /home/dztang/active_mapping/log:/var/log/activemq 
+    - /home/dztang/active_mapping/conf:/opt/activemq/conf 
+    - /home/dztang/active_mapping/lib/mysql-connector-5.1.38.jar:/opt/activemq/lib/optional/mysql-connector-5.1.38.jar 
+    
+  env_file: /home/dztang/activemq.env
+   
