@@ -69,7 +69,7 @@
 		</copy>
 	</target>
 	<target name="remotedeploywar" depends="build" description="Deploy application as a WAR file">
-		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml" update="true">
 			<fileset dir="${web.dir}">
 				<include name="**/*.*" />
 			</fileset>
@@ -79,7 +79,7 @@
 	</target>
 
 	<target name="remoteDockerDeploywar" depends="config4Docker,build" description="Deploy application as a WAR file">
-		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml" update="true">
 			<fileset dir="${web.dir}">
 				<include name="**/*.*" />
 			</fileset>
