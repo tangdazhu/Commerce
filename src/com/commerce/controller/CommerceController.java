@@ -136,13 +136,15 @@ public class CommerceController {
 		if (suffix.equals("")) {
 			User dbuser = userManager.getUserByEmail(email);
 
-//			Captcha captcha = (Captcha) request.getSession().getAttribute(Captcha.NAME);
-//			request.setCharacterEncoding("UTF-8");
-//			String answer = request.getParameter("answer");
-//			if ((answer != null) && ((captcha != null)) && !captcha.isCorrect(answer)) {
-//				mv.setViewName("login");
-//				return mv;
-//			}
+			// Captcha captcha = (Captcha)
+			// request.getSession().getAttribute(Captcha.NAME);
+			// request.setCharacterEncoding("UTF-8");
+			// String answer = request.getParameter("answer");
+			// if ((answer != null) && ((captcha != null)) &&
+			// !captcha.isCorrect(answer)) {
+			// mv.setViewName("login");
+			// return mv;
+			// }
 
 			if (dbuser == null || !password.equals(dbuser.getPassword())) {
 				mv.setViewName("login");
@@ -178,8 +180,8 @@ public class CommerceController {
 		}
 		mv.addObject("pageSize", pageSize);
 		mv.addObject("totalPage", totalPage);
-
-		model.asMap().clear();
+		if (model != null)
+			model.asMap().clear();
 		deliverViewOnSuffix(mv, attributeName, l, suffix);
 
 		return mv;
