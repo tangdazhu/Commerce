@@ -73,7 +73,7 @@
 		</form>
 
 	</div>
-<div id="page-selection"></div>	
+<div id="page-selection" align="center"></div>	
     
     <script>
     var showData = $('#page-result');
@@ -103,8 +103,8 @@
             maxVisible: 5,
             leaps: true,
             firstLastUse: true,
-            first: 'â†�',
-            last: 'â†’',
+            first: 'First',
+            last: 'Last’',
             wrapClass: 'pagination',
             activeClass: 'active',
             disabledClass: 'disabled',
