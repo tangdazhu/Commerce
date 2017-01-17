@@ -80,14 +80,15 @@
 			<br />
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
-		</form:form>
-		<FONT size=3 COLOR="#0000FF"> Instance <%=InetAddress.getLocalHost()%>
+				<FONT size=3 COLOR="#0000FF"> Instance <%=InetAddress.getLocalHost()%>
 		</FONT> <FONT size=3 COLOR="#CC0000"> <br /> Session Id : <%=request.getSession().getId()%>
 			<br /> Is it New Session : <%=request.getSession().isNew()%><br />
 			Session Creation Date : <%=new Date(request.getSession().getCreationTime())%><br />
 			Session Access Date : <%=new Date(request.getSession().getLastAccessedTime())%><br />
 			<br />
 		</FONT>
+		</form:form>
+		
 	</div>
 	<!-- /container -->
 
