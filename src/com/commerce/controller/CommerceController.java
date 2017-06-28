@@ -121,6 +121,15 @@ public class CommerceController {
 		mv.setViewName("commodityDetails");
 		return mv;
 	}
+	
+	@RequestMapping(value = "/quit", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView quitSubmit(Model model, HttpServletRequest request)
+			throws Exception {
+		ModelAndView mv = new ModelAndView();
+		request.getSession().removeAttribute("user");		
+		mv.setViewName("login");
+		return mv;
+	}
 
 	@RequestMapping(value = "/commodityList", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView loginSubmit(@ModelAttribute("userForm") User user, Model model, HttpServletRequest request)

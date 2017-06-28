@@ -26,14 +26,14 @@
 <title>Commerce</title>
 
 <!-- Bootstrap core CSS -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="/Commerce/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="css/signin.css" rel="stylesheet">
+<link href="/Commerce/css/signin.css" rel="stylesheet">
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-<script src="assets/js/ie-emulation-modes-warning.js"></script>
+<script src="/Commerce/assets/js/ie-emulation-modes-warning.js"></script>
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,8 +78,10 @@
 			<img src="<c:url value="simpleCaptcha.png" />">
 			 -->
 			<br />
+
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
 				in</button>
+			<!-- 
 				<FONT size=3 COLOR="#0000FF"> Instance <%=InetAddress.getLocalHost()%>
 		</FONT> <FONT size=3 COLOR="#CC0000"> <br /> Session Id : <%=request.getSession().getId()%>
 			<br /> Is it New Session : <%=request.getSession().isNew()%><br />
@@ -87,6 +89,7 @@
 			Session Access Date : <%=new Date(request.getSession().getLastAccessedTime())%><br />
 			<br />
 		</FONT>
+		 -->
 		</form:form>
 		
 	</div>

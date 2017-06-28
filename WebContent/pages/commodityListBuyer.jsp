@@ -42,7 +42,7 @@
 <body>
 
 	<div class="container" id="content">
-
+<a href="/Commerce/quit/">quit</a>
 		<form class="form-signin" action="" method="POST">
 			<table class="table table-hover">
 				<thead>
